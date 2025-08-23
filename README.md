@@ -1,2 +1,2 @@
-# restaurant-page
-WebPack
+# Todo List
+A simple todo list
