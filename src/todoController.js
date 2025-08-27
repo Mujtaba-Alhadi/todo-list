@@ -27,7 +27,7 @@ class Project {
   }
 }
 
-const controller = (function () {
+const todoController = (function () {
   let projectsArr = [];
 
   const createTodo = (title, description, dueDate, priority) => {
@@ -45,4 +45,4 @@ const controller = (function () {
   return { createTodo, createProject, getProjectArr };
 })();
 
-export default controller;
+export default todoController;

@@ -1,5 +1,5 @@
 import "./style.css";
-import controller from "./controller.js";
+import todoController from "./todoController.js";
 
 // todo class
 // projects = separate list of todos
@@ -17,10 +17,10 @@ import controller from "./controller.js";
 // figure out how to add methods back to your object properties once you fetch them
 
 
-const myProject = controller.createProject("myProject");
-const task1 = controller.createTodo("Task 1", "Description 1", "2025-09-01", "High");
-const task2 = controller.createTodo("Task 2", "Description 2", "2025-09-05", "Low");
+const myProject = todoController.createProject("myProject");
+const task1 = todoController.createTodo("Task 1", "Description 1", "2025-09-01", "High");
+const task2 = todoController.createTodo("Task 2", "Description 2", "2025-09-05", "Low");
 myProject.addTask(task1);
 myProject.addTask(task2);
 myProject.removeTask(task1);
-console.log(controller.getProjectArr());
+console.log(todoController.getProjectArr());
