@@ -1,8 +1,7 @@
 class Task {
-  constructor(id, title, description, dueDate, priority) {
+  constructor(id, title, dueDate, priority) {
     this.id = id;
     this.title = title;
-    this.description = description;
     this.dueDate = dueDate;
     this.priority = priority;
   }
@@ -30,8 +29,8 @@ class Project {
 const todoController = (function () {
   let projectsArr = [];
 
-  const createTodo = (title, description, dueDate, priority) => {
-    return new Task(crypto.randomUUID(), title, description, dueDate, priority);
+  const createTodo = (title, dueDate, priority) => {
+    return new Task(crypto.randomUUID(), title, dueDate, priority);
   };
 
   const createProject = (name) => {

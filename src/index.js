@@ -18,8 +18,8 @@ import todoController from "./todoController.js";
 
 
 const myProject = todoController.createProject("myProject");
-const task1 = todoController.createTodo("Task 1", "Description 1", "2025-09-01", "High");
-const task2 = todoController.createTodo("Task 2", "Description 2", "2025-09-05", "Low");
+const task1 = todoController.createTodo("Task 1", "2025-09-01", "High");
+const task2 = todoController.createTodo("Task 2", "2025-09-05", "Low");
 myProject.addTask(task1);
 myProject.addTask(task2);
 myProject.removeTask(task1);

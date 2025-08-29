@@ -157,7 +157,11 @@ input[name="check-task"] {
   accent-color: #333;
   border-radius: 6px;
   margin-right: -5px;
+  cursor: pointer;
 }
 input[name="check-task"]:checked ~ .task-title {
   text-decoration: line-through;
+}
+.edit-task {
+  cursor: pointer;
 }
