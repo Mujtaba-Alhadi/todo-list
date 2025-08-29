@@ -1,11 +1,85 @@
 <!DOCTYPE html>
 <html lang="en">
-<head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Todo List</title>
-</head>
-<body>
-    
-</body>
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Todo List</title>
+  </head>
+  <body>
+    <div class="sidebar">
+      <h3>Projects</h3>
+      <div class="project-list">
+        <div class="active project">
+          <div class="project-name">Home</div>
+          <div class="edit-project">•••</div>
+        </div>
+        <div class="project">
+          <div class="project-name">Yo</div>
+          <div class="edit-project">•••</div>
+        </div>
+      </div>
+      <button class="add-project">
+        <span class="icon">+</span>
+        Add Project
+      </button>
+    </div>
+    <div class="content">
+      <h1 class="project-name">Project Name</h1>
+      <form class="task-form" action="">
+        <input
+          type="text"
+          name="task-name"
+          id="task-name"
+          placeholder="Task name"
+        />
+        <input type="date" name="due-date" id="due-date" />
+        <select name="priority">
+          <option value="low">Low Priority</option>
+          <option value="medium">Medium Priority</option>
+          <option value="high">High Priority</option>
+        </select>
+        <button type="submit" class="add-task">
+          <span class="icon">+</span>
+          Add Task
+        </button>
+      </form>
+      <div class="task-list">
+        <div class="task">
+          <div>
+            <input type="checkbox" name="check-task" id="check-task" />
+            <h3 class="task-title">Task Title</h3>
+          </div>
+          <div>
+            <p class="due-date">Fri, Aug 29</p>
+            <p class="low priority">Low</p>
+            <div class="edit-task">•••</div>
+          </div>
+        </div>
+
+        <div class="task">
+          <div>
+            <input type="checkbox" name="check-task" id="check-task" />
+            <h3 class="task-title">Task Title</h3>
+          </div>
+          <div>
+            <p class="due-date">Fri, Aug 29</p>
+            <p class="medium priority">Medium</p>
+            <div class="edit-task">•••</div>
+          </div>
+        </div>
+
+        <div class="task">
+          <div>
+            <input type="checkbox" name="check-task" id="check-task" />
+            <h3 class="task-title">Task Title</h3>
+          </div>
+          <div>
+            <p class="due-date">Fri, Aug 29</p>
+            <p class="high priority">High</p>
+            <div class="edit-task">•••</div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </body>
 </html>
