@@ -16,24 +16,25 @@ import todoController from "./todoController.js";
 // make sure it doesn't crash if the data is not there
 // figure out how to add methods back to your object properties once you fetch them
 
-const myProject = todoController.createProject("My Project");
-const Home = todoController.createProject("Home");
-const task1 = todoController.createTodo("Task 1", "2025-09-01", "High");
-const task2 = todoController.createTodo("Task 2", "2025-09-05", "Low");
-myProject.addTask(task1);
-myProject.addTask(task2);
-myProject.removeTask(task1);
 console.log(todoController.getProjectArr());
-
 const display = function () {
   const projectList = document.querySelector(".project-list");
   let projectArr = todoController.getProjectArr();
   const taskList = document.querySelector(".task-list");
 
-  const renderTasks = () => {
+  const renderTasks = () => {};
 
-  }
-
+  const defaultProject = () => {
+    const Home = todoController.createProject("Home");
+    Home.addTask("This is a task", new Date(), "low");
+    Home.addTask("This is a medium priority task", new Date(), "medium");
+    Home.addTask("This is a high priority task", new Date(), "high");
+  };
+  defaultProject();
+  
+  todoController.createProject("My Project");
+  todoController.createProject("YoYo");
+  
   const renderProjects = () => {
     for (let i = 0; i < projectArr.length; i++) {
       const project = document.createElement("div");
@@ -44,7 +45,9 @@ const display = function () {
       editProject.className = "edit-project";
 
       projectName.textContent = projectArr[i].name;
-      editProject.textContent = "•••";
+      if (projectName.textContent !== "Home") {
+        editProject.textContent = "•••";
+      }
 
       project.appendChild(projectName);
       project.appendChild(editProject);
