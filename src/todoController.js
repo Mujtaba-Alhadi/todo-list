@@ -14,8 +14,10 @@ class Project {
     this.taskArr = [];
   }
 
-  addTask(task) {
-    this.taskArr.push(task);
+  addTask(title, dueDate, priority) {
+    const newTask = new Task(crypto.randomUUID(), title, dueDate, priority);
+    this.taskArr.push(newTask);
+    return newTask;
   }
 
   removeTask(task) {
@@ -29,10 +31,6 @@ class Project {
 const todoController = (function () {
   let projectsArr = [];
 
-  const createTodo = (title, dueDate, priority) => {
-    return new Task(crypto.randomUUID(), title, dueDate, priority);
-  };
-
   const createProject = (name) => {
     const newProject = new Project(name, crypto.randomUUID());
     projectsArr.push(newProject);
@@ -41,7 +39,7 @@ const todoController = (function () {
 
   const getProjectArr = () => projectsArr;
 
-  return { createTodo, createProject, getProjectArr };
+  return { createProject, getProjectArr };
 })();
 
 export default todoController;
