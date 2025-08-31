@@ -119,7 +119,7 @@ input[name="task-name"] {
   font-size: 35px;
   margin-right: 5px;
 }
-.task-list {
+.task-container {
   display: flex;
   flex-direction: column;
   gap: 10px;

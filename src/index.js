@@ -18,9 +18,9 @@ import todoController from "./todoController.js";
 
 console.log(todoController.getProjectArr());
 const display = function () {
-  const projectList = document.querySelector(".project-list");
+  const projectContainer = document.querySelector(".project-container");
   let projectArr = todoController.getProjectArr();
-  const taskList = document.querySelector(".task-list");
+  const taskContainer = document.querySelector(".task-container");
 
   const renderTasks = () => {};
 
@@ -45,13 +45,13 @@ const display = function () {
       editProject.className = "edit-project";
 
       projectName.textContent = projectArr[i].name;
-      if (projectName.textContent !== "Home") {
+      if (projectArr[i].name !== "Home") {
         editProject.textContent = "•••";
       }
 
       project.appendChild(projectName);
       project.appendChild(editProject);
-      projectList.appendChild(project);
+      projectContainer.appendChild(project);
 
       // Switch active project
       project.addEventListener("click", (e) => {
