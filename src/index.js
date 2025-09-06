@@ -17,22 +17,20 @@ import { format } from "date-fns";
 // figure out how to add methods back to your object properties once you fetch them
 
 const display = function () {
-  const projectContainer = document.querySelector(".project-container");
-  const taskContainer = document.querySelector(".task-container");
-  const projectNameHeader = document.querySelector("h1.project-name");
-  const today = format(new Date(), "EEE, MMM d");
   let projectArr = todoController.getProjectArr();
 
-  // default project
-  const Home = todoController.createProject("Home");
-  Home.addTask("This is a task", today, "Low");
-  Home.addTask("This is a medium priority task", today, "Medium");
-  Home.addTask("This is a high priority task", today, "High");
+  const defaultProject = () => {
+    const Home = todoController.createProject("Home");
+    const today = format(new Date(), "EEE, MMM d");
+    Home.createTask("This is a task", today, "Low");
+    Home.createTask("This is a medium priority task", today, "Medium");
+    Home.createTask("This is a high priority task", today, "High");
+  };
 
   const renderTasks = (project) => {
+    const taskContainer = document.querySelector(".task-container");
     taskContainer.textContent = "";
     for (let i = 0; i < project.taskArr.length; i++) {
-      // creating elements and appending to the DOM
       const task = document.createElement("div");
       task.className = "task";
 
@@ -70,15 +68,33 @@ const display = function () {
     }
   };
 
-  const myProject = todoController.createProject("My Project");
-  myProject.addTask("1", "2", "3");
-  todoController.createProject("YoYo");
+  const addTask = () => {
+    const taskForm = document.querySelector(".task-form");
+    taskForm.addEventListener("submit", (e) => {
+      e.preventDefault();
+
+      const title = document.querySelector("input[name = 'task-name']").value;
+      const dueDate = document.querySelector("input[name = 'due-date']").value;
+      const priority = document.querySelector("select[name = 'priority']").value;
+      // find the active project and insert the task into it
+      const activeProjectId = document.querySelector(".project.active").id;
+      const activeProject = projectArr.find((project) => project.id === activeProjectId);
+      activeProject.createTask(title, format(new Date(dueDate), "EEE, MMM d"), priority);
+
+      renderTasks(activeProject);
+      taskForm.reset();
+    });
+  };
 
   const renderProjects = () => {
+    const projectContainer = document.querySelector(".project-container");
+    const projectNameHeader = document.querySelector("h1.project-name");
+
     for (let i = 0; i < projectArr.length; i++) {
-      // creating elements and appending to the DOM
+      // create elements and append to the DOM
       const project = document.createElement("div");
       project.className = "project";
+      project.id = projectArr[i].id;
 
       const projectName = document.createElement("div");
       projectName.className = "project-name";
@@ -86,6 +102,7 @@ const display = function () {
 
       project.appendChild(projectName);
       if (projectArr[i].name !== "Home") {
+        // prevent users to edit the Home project
         const editProject = document.createElement("div");
         editProject.className = "edit-project";
         editProject.textContent = "•••";
@@ -98,7 +115,7 @@ const display = function () {
       if (projectArr[i].name === "Home") {
         project.classList.add("active");
         projectNameHeader.textContent = projectArr[i].name;
-        renderTasks(Home);
+        renderTasks(projectArr[i]);
       }
 
       // Switch active project
@@ -112,7 +129,12 @@ const display = function () {
       });
     }
   };
+
+  defaultProject();
+  const myProject = todoController.createProject("My Project");
+  const yoyo = todoController.createProject("YoYo");
   renderProjects();
+  addTask();
 };
 
 display();

@@ -16,17 +16,12 @@
     <div class="content">
       <h1 class="project-name">Project Name</h1>
       <form class="task-form" action="">
-        <input
-          type="text"
-          name="task-name"
-          id="task-name"
-          placeholder="Task name"
-        />
-        <input type="date" name="due-date" id="due-date" />
-        <select name="priority">
-          <option value="low">Low Priority</option>
-          <option value="medium">Medium Priority</option>
-          <option value="high">High Priority</option>
+        <input type="text" name="task-name" placeholder="Task name" required />
+        <input type="date" name="due-date" required />
+        <select name="priority" required>
+          <option value="Low">Low Priority</option>
+          <option value="Medium">Medium Priority</option>
+          <option value="High">High Priority</option>
         </select>
         <button type="submit" class="add-task">
           <span class="icon">+</span>

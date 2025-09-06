@@ -1,9 +1,9 @@
 class Task {
-  constructor(id, title, dueDate, priority) {
-    this.id = id;
+  constructor(title, dueDate, priority, id) {
     this.title = title;
     this.dueDate = dueDate;
     this.priority = priority;
+    this.id = id;
   }
 }
 
@@ -14,8 +14,8 @@ class Project {
     this.taskArr = [];
   }
 
-  addTask(title, dueDate, priority) {
-    const newTask = new Task(crypto.randomUUID(), title, dueDate, priority);
+  createTask(title, dueDate, priority) {
+    const newTask = new Task(title, dueDate, priority, crypto.randomUUID());
     this.taskArr.push(newTask);
     return newTask;
   }
