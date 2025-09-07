@@ -18,6 +18,7 @@ import { format } from "date-fns";
 
 const display = function () {
   let projectArr = todoController.getProjectArr();
+  const projectNameHeader = document.querySelector("h1.project-name");
 
   const defaultProject = () => {
     const Home = todoController.createProject("Home");
@@ -76,6 +77,7 @@ const display = function () {
       const title = document.querySelector("input[name = 'task-name']").value;
       const dueDate = document.querySelector("input[name = 'due-date']").value;
       const priority = document.querySelector("select[name = 'priority']").value;
+      
       // find the active project and insert the task into it
       const activeProjectId = document.querySelector(".project.active").id;
       const activeProject = projectArr.find((project) => project.id === activeProjectId);
@@ -86,9 +88,46 @@ const display = function () {
     });
   };
 
+  const addProject = () => {
+    const projectForm = document.querySelector(".project-form");
+    const addProjectBtn = document.querySelector("button.add-project");
+    const addProjectName = document.querySelector("input[name='add-project-name']");
+    const cancel = document.querySelector("button.cancel");
+    const addBtn = document.querySelector("button.add");
+
+    // hide the add-project btn, show the project-form and vice versa
+    const toggleHidden = () => {
+      addProjectBtn.classList.toggle("hidden");
+      projectForm.classList.toggle("hidden");
+    };
+    addProjectBtn.addEventListener("click", () => {
+      toggleHidden();
+      addProjectName.focus();
+    });
+    cancel.addEventListener("click", () => toggleHidden());
+    
+    // create project and make it active
+    projectForm.addEventListener("submit", (e) => {
+      e.preventDefault();
+
+      const newProject = todoController.createProject(addProjectName.value);
+      renderProjects();
+      toggleHidden();
+
+      const allProjects = document.querySelectorAll(".project");
+      allProjects.forEach((project) => project.classList.remove("active"));
+      const newProjectElement = document.getElementById(`${newProject.id}`);
+      newProjectElement.classList.add("active");
+      projectNameHeader.textContent = newProject.name;
+      renderTasks(newProject);
+
+      projectForm.reset();
+    });
+  };
+
   const renderProjects = () => {
     const projectContainer = document.querySelector(".project-container");
-    const projectNameHeader = document.querySelector("h1.project-name");
+    projectContainer.textContent = "";
 
     for (let i = 0; i < projectArr.length; i++) {
       // create elements and append to the DOM
@@ -101,8 +140,9 @@ const display = function () {
       projectName.textContent = projectArr[i].name;
 
       project.appendChild(projectName);
+      
+      // prevent users to edit the Home project
       if (projectArr[i].name !== "Home") {
-        // prevent users to edit the Home project
         const editProject = document.createElement("div");
         editProject.className = "edit-project";
         editProject.textContent = "•••";
@@ -131,9 +171,9 @@ const display = function () {
   };
 
   defaultProject();
-  const myProject = todoController.createProject("My Project");
-  const yoyo = todoController.createProject("YoYo");
+  todoController.createProject("My Project");
   renderProjects();
+  addProject();
   addTask();
 };
 
