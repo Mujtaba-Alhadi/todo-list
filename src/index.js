@@ -210,6 +210,13 @@ const display = function () {
     cancel.addEventListener("click", () => {
       popupLayer.classList.add("hidden");
     });
+
+    deleteBtn.addEventListener("click", () => {
+      const projectIndex = projectArr.indexOf(currentProject);
+      projectArr.splice(projectIndex, 1);
+      popupLayer.classList.add("hidden");
+      renderProjects();
+    });
   };
 
   defaultProject();
