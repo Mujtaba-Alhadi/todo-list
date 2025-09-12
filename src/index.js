@@ -178,7 +178,6 @@ const display = function () {
     let currentProject;
 
     projectContainer.addEventListener("click", (e) => {
-      console.log(e.target);
       if (e.target.classList.contains("edit-project")) {
         popupLayer.classList.remove("hidden");
         const projectId = e.target.parentElement.id;
