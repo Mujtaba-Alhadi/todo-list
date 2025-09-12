@@ -13,13 +13,25 @@
         Add Project
       </button>
       <form class="project-form hidden">
-        <input type="text" name="add-project-name" />
+        <input type="text" name="add-project-name" required/>
         <button type="reset" class="cancel">Cancel</button>
         <button type="submit" class="add">Add</button>
       </form>
+      <div class="project-popup-layer hidden">
+        <div class="project-popup">
+          <h2>Edit Project</h2>
+          <div class="cancel-edit-project">×</div>
+          <form class="project-popup-form">
+            <input type="text" name="rename-project-input" />
+            <button type="button" class="delete-project">Delete Project</button>
+            <button type="submit" class="rename-project">Rename Project</button>
+          </form>
+        </div>
+      </div>
     </div>
+
     <div class="content">
-      <h1 class="project-name">Project Name</h1>
+      <h1 class="project-name"></h1>
       <form class="task-form">
         <input type="text" name="task-name" placeholder="Task name" required />
         <input type="date" name="due-date" required />

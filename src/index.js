@@ -18,11 +18,12 @@ import { format } from "date-fns";
 
 const display = function () {
   let projectArr = todoController.getProjectArr();
+  const projectContainer = document.querySelector(".project-container");
   const projectNameHeader = document.querySelector("h1.project-name");
 
   const defaultProject = () => {
     const Home = todoController.createProject("Home");
-    const today = format(new Date(), "EEE, MMM d");
+    const today = format(new Date(), "MMM d, yyyy");
     Home.createTask("This is a task", today, "Low");
     Home.createTask("This is a medium priority task", today, "Medium");
     Home.createTask("This is a high priority task", today, "High");
@@ -81,7 +82,7 @@ const display = function () {
       // find the active project and insert the task into it
       const activeProjectId = document.querySelector(".project.active").id;
       const activeProject = projectArr.find((project) => project.id === activeProjectId);
-      activeProject.createTask(title, format(new Date(dueDate), "EEE, MMM d"), priority);
+      activeProject.createTask(title, format(new Date(dueDate), "MMM d, yyyy"), priority);
 
       renderTasks(activeProject);
       taskForm.reset();
@@ -89,7 +90,6 @@ const display = function () {
   };
 
   const renderProjects = () => {
-    const projectContainer = document.querySelector(".project-container");
     projectContainer.textContent = "";
 
     for (let i = 0; i < projectArr.length; i++) {
@@ -126,7 +126,6 @@ const display = function () {
         const allProjects = document.querySelectorAll(".project");
         allProjects.forEach((project) => project.classList.remove("active"));
         e.currentTarget.classList.add("active");
-
         projectNameHeader.textContent = projectArr[i].name;
         renderTasks(projectArr[i]);
       });
@@ -158,9 +157,10 @@ const display = function () {
       renderProjects();
       toggleHidden();
 
+      // make it active
+      const newProjectElement = document.getElementById(`${newProject.id}`);
       const allProjects = document.querySelectorAll(".project");
       allProjects.forEach((project) => project.classList.remove("active"));
-      const newProjectElement = document.getElementById(`${newProject.id}`);
       newProjectElement.classList.add("active");
       projectNameHeader.textContent = newProject.name;
       renderTasks(newProject);
@@ -169,11 +169,56 @@ const display = function () {
     });
   };
 
+  const editProject = () => {
+    const popupLayer = document.querySelector(".project-popup-layer");
+    const cancel = document.querySelector(".cancel-edit-project");
+    const popupForm = document.querySelector(".project-popup-form");
+    const renameInput = document.querySelector("input[name='rename-project-input']");
+    const deleteBtn = document.querySelector(".delete-project");
+    let currentProject;
+
+    projectContainer.addEventListener("click", (e) => {
+      console.log(e.target);
+      if (e.target.classList.contains("edit-project")) {
+        popupLayer.classList.remove("hidden");
+        const projectId = e.target.parentElement.id;
+        currentProject = projectArr.find((p) => p.id === projectId);
+        renameInput.value = currentProject.name;
+        renameInput.focus();
+      }
+    });
+
+    popupForm.addEventListener("submit", (e) => {
+      e.preventDefault();
+
+      currentProject.name = renameInput.value;
+      popupLayer.classList.add("hidden");
+
+      const currentProjectName = document.querySelector(`.project.active .project-name`);
+      currentProjectName.textContent = currentProject.name;
+      renderProjects();
+
+      // make it active again instead of Home
+      const updatedProjectElement = document.getElementById(`${currentProject.id}`);
+      const allProjects = document.querySelectorAll(".project");
+      allProjects.forEach((project) => project.classList.remove("active"));
+      updatedProjectElement.classList.add("active");
+      projectNameHeader.textContent = currentProject.name;
+      renderTasks(currentProject);
+    });
+
+    cancel.addEventListener("click", () => {
+      popupLayer.classList.add("hidden");
+    });
+  };
+
   defaultProject();
   todoController.createProject("My Project");
+  todoController.createProject("YoYo");
   renderProjects();
   addProject();
   addTask();
+  editProject();
 };
 
 display();

@@ -1,3 +1,4 @@
+/* Global */
 * {
   box-sizing: border-box;
   margin: 0;
@@ -16,6 +17,8 @@ body {
   gap: 34px;
   padding: 2rem 1rem;
 }
+
+/* Sidebar and Projects */
 .sidebar,
 .content {
   background-color: white;
@@ -96,9 +99,86 @@ body {
   background-color: #333;
   color: white;
 }
-.hidden {
-  display: none;
+.project-popup-layer {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-color: rgba(0, 0, 0, 0.25);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
 }
+.project-popup {
+  position: relative;
+  background-color: white;
+  padding: 20px;
+  border-radius: 10px;
+  max-width: 330px;
+  margin: 0 10px;
+}
+.project-popup h2 {
+  margin: 10px 0 30px;
+}
+.cancel-edit-project {
+  position: absolute;
+  top: 15px;
+  right: 15px;
+  width: 30px;
+  height: 30px;
+  font-size: 22px;
+  font-weight: bold;
+  border: 1px solid #333;
+  border-radius: 10px;
+  cursor: pointer;
+  transition: 0.2s;
+}
+.cancel-edit-project:hover {
+  background-color: #333;
+  color: white;
+  border-radius: 50%;
+}
+.project-popup-form {
+  display: flex;
+  justify-content: space-between;
+  flex-wrap: wrap;
+  gap: 20px;
+  margin: 10px 0;
+}
+input[name="rename-project-input"] {
+  width: 100%;
+  height: 40px;
+  padding: 10px;
+  border: 1px solid #ccc;
+  border-radius: 10px;
+  outline: none;
+  transition: 0.2s;
+}
+input[name="rename-project-input"]:focus {
+  border: 1px solid #333;
+}
+.delete-project,
+.rename-project {
+  padding: 10px 5px;
+  border: 1px solid #333;
+  border-radius: 10px;
+  background-color: white;
+  font-size: 14px;
+  width: calc(50% - 10px);
+  cursor: pointer;
+}
+.delete-project {
+  border: 1px solid #F40914;
+  color: #F40914;
+}
+.rename-project {
+  background-color: #333;
+  color: white;
+}
+
+/* Content and Tasks */
 .content {
   padding: 20px 35px;
 }
@@ -195,4 +275,8 @@ input[name="check-task"]:checked ~ .task-title {
 }
 .edit-task {
   cursor: pointer;
+}
+/* Hide elements with JavaScript */
+.hidden {
+  display: none;
 }
