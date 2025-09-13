@@ -173,8 +173,8 @@ const display = function () {
     const popupLayer = document.querySelector(".project-popup-layer");
     const cancel = document.querySelector(".cancel-edit-project");
     const popupForm = document.querySelector(".project-popup-form");
-    const renameInput = document.querySelector("input[name='rename-project-input']");
-    const deleteBtn = document.querySelector(".delete-project");
+    const popupName = document.querySelector("input[name='popup-project-name']");
+    const deleteProject = document.querySelector(".delete-project");
     let currentProject;
 
     projectContainer.addEventListener("click", (e) => {
@@ -182,15 +182,15 @@ const display = function () {
         popupLayer.classList.remove("hidden");
         const projectId = e.target.parentElement.id;
         currentProject = projectArr.find((p) => p.id === projectId);
-        renameInput.value = currentProject.name;
-        renameInput.focus();
+        popupName.value = currentProject.name;
+        popupName.focus();
       }
     });
 
     popupForm.addEventListener("submit", (e) => {
       e.preventDefault();
 
-      currentProject.name = renameInput.value;
+      currentProject.name = popupName.value;
       popupLayer.classList.add("hidden");
 
       const currentProjectName = document.querySelector(`.project.active .project-name`);
@@ -210,13 +210,17 @@ const display = function () {
       popupLayer.classList.add("hidden");
     });
 
-    deleteBtn.addEventListener("click", () => {
+    deleteProject.addEventListener("click", () => {
       const projectIndex = projectArr.indexOf(currentProject);
       projectArr.splice(projectIndex, 1);
       popupLayer.classList.add("hidden");
       renderProjects();
     });
   };
+
+  const editTask = () => {
+
+  }
 
   defaultProject();
   todoController.createProject("My Project");
@@ -225,6 +229,7 @@ const display = function () {
   addProject();
   addTask();
   editProject();
+  editTask();
 };
 
 display();
