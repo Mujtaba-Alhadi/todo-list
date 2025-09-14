@@ -19,22 +19,27 @@ import { format } from "date-fns";
 const display = function () {
   let projectArr = todoController.getProjectArr();
   const projectContainer = document.querySelector(".project-container");
+  const taskContainer = document.querySelector(".task-container");
   const projectNameHeader = document.querySelector("h1.project-name");
 
-  const defaultProject = () => {
+  const defaultRendering = () => {
     const Home = todoController.createProject("Home");
     const today = format(new Date(), "MMM d, yyyy");
     Home.createTask("This is a task", today, "Low");
     Home.createTask("This is a medium priority task", today, "Medium");
     Home.createTask("This is a high priority task", today, "High");
+
+    // make due-date the current day by default
+    const dateInput = document.querySelector("input[name='due-date']");
+    dateInput.value = format(today, "yyyy-MM-dd");
   };
 
   const renderTasks = (project) => {
-    const taskContainer = document.querySelector(".task-container");
     taskContainer.textContent = "";
     for (let i = 0; i < project.taskArr.length; i++) {
       const task = document.createElement("div");
       task.className = "task";
+      task.id = project.taskArr[i].id;
 
       const checkbox = document.createElement("input");
       checkbox.type = "checkbox";
@@ -86,6 +91,8 @@ const display = function () {
 
       renderTasks(activeProject);
       taskForm.reset();
+    // make due-date the current day by default again :)
+      document.querySelector("input[name='due-date']").value = format(new Date(), "yyyy-MM-dd");
     });
   };
 
@@ -189,12 +196,10 @@ const display = function () {
 
     popupForm.addEventListener("submit", (e) => {
       e.preventDefault();
-
-      currentProject.name = popupName.value;
       popupLayer.classList.add("hidden");
 
-      const currentProjectName = document.querySelector(`.project.active .project-name`);
-      currentProjectName.textContent = currentProject.name;
+      currentProject.name = popupName.value;
+      document.querySelector(".project.active .project-name").textContent = currentProject.name;
       renderProjects();
 
       // make it active again instead of Home
@@ -219,12 +224,50 @@ const display = function () {
   };
 
   const editTask = () => {
+    const popupLayer = document.querySelector(".task-popup-layer");
+    const cancel = document.querySelector(".cancel-edit-task");
+    const popupForm = document.querySelector(".task-popup-form");
+    const popupName = document.querySelector("input[name='popup-task-name']");
+    const popupPriority = document.querySelector("select[name='popup-priority']");
+    const popupDueDate = document.querySelector("input[name='popup-due-date']");
+    const deleteTask = document.querySelector(".delete-task");
+    let currentTask;
 
-  }
+    // find the active project
+    const activeProjectId = document.querySelector(".project.active").id;
+    const activeProject = projectArr.find((project) => project.id === activeProjectId);
 
-  defaultProject();
-  todoController.createProject("My Project");
-  todoController.createProject("YoYo");
+    taskContainer.addEventListener("click", (e) => {
+      if (e.target.classList.contains("edit-task")) {
+        popupLayer.classList.remove("hidden");
+        const taskId = e.target.parentElement.parentElement.id;
+        currentTask = activeProject.taskArr.find((task) => task.id === taskId);
+        popupName.value = currentTask.title;
+        popupPriority.value = currentTask.priority;
+        const taskDate = new Date(currentTask.dueDate);
+        popupDueDate.value = format(taskDate, "yyyy-MM-dd");
+        popupName.focus();
+      }
+    });
+
+    popupForm.addEventListener("submit", (e) => {
+      e.preventDefault();
+      popupLayer.classList.add("hidden");
+
+      currentTask.title = popupName.value;
+      currentTask.priority = popupPriority.value;
+      currentTask.dueDate = format(new Date(popupDueDate.value), "MMM d, yyyy");
+
+      renderTasks(activeProject);
+      console.log(activeProject);
+    });
+
+    cancel.addEventListener("click", () => {
+      popupLayer.classList.add("hidden");
+    });
+  };
+
+  defaultRendering();
   renderProjects();
   addProject();
   addTask();
