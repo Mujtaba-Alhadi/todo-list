@@ -231,13 +231,13 @@ const display = function () {
     const popupPriority = document.querySelector("select[name='popup-priority']");
     const popupDueDate = document.querySelector("input[name='popup-due-date']");
     const deleteTask = document.querySelector(".delete-task");
-    let currentTask;
-
-    // find the active project
-    const activeProjectId = document.querySelector(".project.active").id;
-    const activeProject = projectArr.find((project) => project.id === activeProjectId);
-
+    let currentTask, activeProjectId, activeProject;
+    
     taskContainer.addEventListener("click", (e) => {
+      // find the active project
+      activeProjectId = document.querySelector(".project.active").id;
+      activeProject = projectArr.find((project) => project.id === activeProjectId);
+      
       if (e.target.classList.contains("edit-task")) {
         popupLayer.classList.remove("hidden");
         const taskId = e.target.parentElement.parentElement.id;
@@ -259,12 +259,17 @@ const display = function () {
       currentTask.dueDate = format(new Date(popupDueDate.value), "MMM d, yyyy");
 
       renderTasks(activeProject);
-      console.log(activeProject);
     });
 
     cancel.addEventListener("click", () => {
       popupLayer.classList.add("hidden");
     });
+
+    deleteTask.addEventListener("click", () => {
+      activeProject.removeTask(currentTask);
+      renderTasks(activeProject);
+      popupLayer.classList.add("hidden");
+    })
   };
 
   defaultRendering();
