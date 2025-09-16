@@ -1,9 +1,10 @@
 class Task {
-  constructor(title, dueDate, priority, id) {
+  constructor(title, dueDate, priority, id, completed = false) {
     this.title = title;
     this.dueDate = dueDate;
     this.priority = priority;
     this.id = id;
+    this.completed = completed;
   }
 }
 
@@ -39,7 +40,29 @@ const todoController = (function () {
 
   const getProjectArr = () => projectsArr;
 
-  return { createProject, getProjectArr };
+  const saveToLocalStorage = () => {
+    localStorage.setItem("projectsArr", JSON.stringify(projectsArr));
+  };
+
+  const loadFromLocalStorage = () => {
+    const data = localStorage.getItem("projectsArr");
+
+    if (data) {
+      const parsedData = JSON.parse(data);
+
+      projectsArr = parsedData.map((project) => {
+        const restoredProject = new Project(project.name, project.id);
+
+        restoredProject.taskArr = project.taskArr.map((task) => {
+          return new Task(task.title, task.dueDate, task.priority, task.id, task.completed);
+        });
+
+        return restoredProject;
+      });
+    }
+  };
+
+  return { createProject, getProjectArr, saveToLocalStorage, loadFromLocalStorage };
 })();
 
 export default todoController;

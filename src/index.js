@@ -1,29 +1,17 @@
 import "./style.css";
 import todoController from "./todoController.js";
 import { format } from "date-fns";
-// todo class
-// projects = separate list of todos
-// default project, users can create new projects
-// separate the logic from the DOM (new todos, setting todos as complete, changing priority)
-// the ui should be able to:
-//    view all projects
-//    view all todos in each project (without the description)
-//    expand a todo to see/edit it
-//    delete a todo
-// for formatting and manipulating dates use date-fns library
-// function that uses localStorage to save data
-// function that looks for that data in localStorage when the app is loaded
-// make sure it doesn't crash if the data is not there
-// figure out how to add methods back to your object properties once you fetch them
 
 const display = function () {
+  todoController.loadFromLocalStorage();
   let projectArr = todoController.getProjectArr();
   const projectContainer = document.querySelector(".project-container");
   const taskContainer = document.querySelector(".task-container");
   const projectNameHeader = document.querySelector("h1.project-name");
 
-  const defaultRendering = () => {
+  if (projectArr.length === 0) {
     const Home = todoController.createProject("Home");
+    const myProject = todoController.createProject("My Project");
     const today = format(new Date(), "MMM d, yyyy");
     Home.createTask("This is a task", today, "Low");
     Home.createTask("This is a medium priority task", today, "Medium");
@@ -31,31 +19,41 @@ const display = function () {
 
     // make due-date the current day by default
     const dateInput = document.querySelector("input[name='due-date']");
-    dateInput.value = format(today, "yyyy-MM-dd");
-  };
+    dateInput.value = format(new Date(), "yyyy-MM-dd");
+  }
 
-  const renderTasks = (project) => {
+  const renderTasks = () => {
     taskContainer.textContent = "";
-    for (let i = 0; i < project.taskArr.length; i++) {
+
+    // find the active project and render the tasks inside of it
+    const activeProjectId = document.querySelector(".project.active").id;
+    const activeProject = projectArr.find((project) => project.id === activeProjectId);
+
+    for (let i = 0; i < activeProject.taskArr.length; i++) {
       const task = document.createElement("div");
       task.className = "task";
-      task.id = project.taskArr[i].id;
+      task.id = activeProject.taskArr[i].id;
 
       const checkbox = document.createElement("input");
       checkbox.type = "checkbox";
       checkbox.name = "check-task";
+      checkbox.checked = activeProject.taskArr[i].completed;
+      checkbox.addEventListener("change", () => {
+        activeProject.taskArr[i].completed = checkbox.checked;
+        todoController.saveToLocalStorage();
+      });
 
       const title = document.createElement("h3");
       title.className = "task-title";
-      title.textContent = project.taskArr[i].title;
+      title.textContent = activeProject.taskArr[i].title;
 
       const dueDate = document.createElement("p");
       dueDate.className = "due-date";
-      dueDate.textContent = project.taskArr[i].dueDate;
+      dueDate.textContent = activeProject.taskArr[i].dueDate;
 
       const priority = document.createElement("p");
       priority.className = "priority";
-      priority.textContent = project.taskArr[i].priority;
+      priority.textContent = activeProject.taskArr[i].priority;
 
       const editTask = document.createElement("div");
       editTask.className = "edit-task";
@@ -87,11 +85,13 @@ const display = function () {
       // find the active project and insert the task into it
       const activeProjectId = document.querySelector(".project.active").id;
       const activeProject = projectArr.find((project) => project.id === activeProjectId);
-      activeProject.createTask(title, format(new Date(dueDate), "MMM d, yyyy"), priority);
 
-      renderTasks(activeProject);
+      activeProject.createTask(title, format(new Date(dueDate), "MMM d, yyyy"), priority);
+      renderTasks();
       taskForm.reset();
-    // make due-date the current day by default again :)
+      todoController.saveToLocalStorage();
+
+      // make due-date the current day by default again :)
       document.querySelector("input[name='due-date']").value = format(new Date(), "yyyy-MM-dd");
     });
   };
@@ -125,7 +125,7 @@ const display = function () {
       if (projectArr[i].name === "Home") {
         project.classList.add("active");
         projectNameHeader.textContent = projectArr[i].name;
-        renderTasks(projectArr[i]);
+        renderTasks();
       }
 
       // Switch active project
@@ -134,7 +134,7 @@ const display = function () {
         allProjects.forEach((project) => project.classList.remove("active"));
         e.currentTarget.classList.add("active");
         projectNameHeader.textContent = projectArr[i].name;
-        renderTasks(projectArr[i]);
+        renderTasks();
       });
     }
   };
@@ -170,9 +170,10 @@ const display = function () {
       allProjects.forEach((project) => project.classList.remove("active"));
       newProjectElement.classList.add("active");
       projectNameHeader.textContent = newProject.name;
-      renderTasks(newProject);
+      renderTasks();
 
       projectForm.reset();
+      todoController.saveToLocalStorage();
     });
   };
 
@@ -208,7 +209,8 @@ const display = function () {
       allProjects.forEach((project) => project.classList.remove("active"));
       updatedProjectElement.classList.add("active");
       projectNameHeader.textContent = currentProject.name;
-      renderTasks(currentProject);
+      renderTasks();
+      todoController.saveToLocalStorage();
     });
 
     cancel.addEventListener("click", () => {
@@ -220,6 +222,7 @@ const display = function () {
       projectArr.splice(projectIndex, 1);
       popupLayer.classList.add("hidden");
       renderProjects();
+      todoController.saveToLocalStorage();
     });
   };
 
@@ -232,12 +235,12 @@ const display = function () {
     const popupDueDate = document.querySelector("input[name='popup-due-date']");
     const deleteTask = document.querySelector(".delete-task");
     let currentTask, activeProjectId, activeProject;
-    
+
     taskContainer.addEventListener("click", (e) => {
       // find the active project
       activeProjectId = document.querySelector(".project.active").id;
       activeProject = projectArr.find((project) => project.id === activeProjectId);
-      
+
       if (e.target.classList.contains("edit-task")) {
         popupLayer.classList.remove("hidden");
         const taskId = e.target.parentElement.parentElement.id;
@@ -258,7 +261,8 @@ const display = function () {
       currentTask.priority = popupPriority.value;
       currentTask.dueDate = format(new Date(popupDueDate.value), "MMM d, yyyy");
 
-      renderTasks(activeProject);
+      renderTasks();
+      todoController.saveToLocalStorage();
     });
 
     cancel.addEventListener("click", () => {
@@ -267,12 +271,12 @@ const display = function () {
 
     deleteTask.addEventListener("click", () => {
       activeProject.removeTask(currentTask);
-      renderTasks(activeProject);
+      renderTasks();
       popupLayer.classList.add("hidden");
-    })
+      todoController.saveToLocalStorage();
+    });
   };
 
-  defaultRendering();
   renderProjects();
   addProject();
   addTask();
